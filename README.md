@@ -17,7 +17,7 @@ entries = edict.parse_dictionary(EDICT_FILE_PATH)
 An edict.Entry looks like this:
 
 ```
-Entry(kanji=['大丈夫'], kana=['だいじょうぶ', 'だいじょぶ'], pos=['adjectival nouns or quasi-adjectives (keiyodoshi)', 'adverb (fukushi)', 'noun (common) (futsuumeishi)'], mark=['common', 'archaism', 'common'], region=[])
+Entry(kanji=['大丈夫'], kana=['だいじょうぶ', 'だいじょぶ'], pos=['adjectival nouns or quasi-adjectives (keiyodoshi)', 'adverb (fukushi)', 'noun (common) (futsuumeishi)'], mark=['common', 'archaism', 'common'], region=[], definitions=[['safe', 'all right', 'alright', 'OK', 'okay', 'sure'], ['certainly', 'surely', 'undoubtedly'], ['(だいじょうぶ only)   great man', 'fine figure of a man']])
 ```
 
 The part of speech for Entry.definitions[0] should be Entry.pos[0]
