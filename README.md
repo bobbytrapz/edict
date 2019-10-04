@@ -4,7 +4,7 @@ You can download edict from http://www.edrdg.org/jmdict/edict.html
 
 ## Install
 
-Just save [edict](/edict.py?raw=true) to where you need it.
+Just save [edict.py](/edict.py?raw=true) to where you need it.
 
 ## Usage
 
