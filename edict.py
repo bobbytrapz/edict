@@ -143,6 +143,7 @@ class Entry:
     region: List[str] = field(default_factory=list)
     ent: List[str] = field(repr=False, default_factory=list)
     ref: List[str] = field(repr=False, default_factory=list)
+    definitions: List = field(init=False)
 
     def __post_init__(self):
         self.definitions = [list()]
