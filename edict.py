@@ -171,7 +171,7 @@ def parse_entry(raw: str) -> Entry:
         for marking in markings:
             mark = MARKING_LOOKUP.get(marking)
             if mark:
-                subitem = subitem.replace('({})'.format(marking), '')
+                subitem = subitem.replace(f'({marking})', '')
                 entry.mark.append(mark)
         return subitem.strip()
 
@@ -202,12 +202,12 @@ def parse_entry(raw: str) -> Entry:
                 mark = marking[:-1]
                 region = REGION_LOOKUP.get(mark)
                 if region:
-                    subitem = subitem.replace('({})'.format(marking), '')
+                    subitem = subitem.replace(f'({marking})', '')
                     entry.region.append(region)
             else:
                 mark = MARKING_LOOKUP.get(marking)
                 if mark:
-                    subitem = subitem.replace('({})'.format(marking), '')
+                    subitem = subitem.replace(f'({marking})', '')
                     entry.mark.append(mark)
         # check for additional info in gloss and replace it before adding
         additional_info = info_re(subitem)
@@ -216,14 +216,14 @@ def parse_entry(raw: str) -> Entry:
                 pos = POS_LOOKUP.get(info_part)
                 if pos:
                     entry.pos.append(pos)
-                    subitem = subitem.replace('({})'.format(info), '')
+                    subitem = subitem.replace(f'({info})', '')
         if subitem:
             # add definition
             defnum = len(entry.definitions)
             m = defnum_re(subitem)
             if m:
                 defnum = int(m[0])
-                subitem = subitem.replace('({})'.format(defnum), '')
+                subitem = subitem.replace(f'({defnum})', '')
             glosses = [g for g in subitem.strip().split(';') if g]
             entry.add_definitions(defnum, glosses)
 
