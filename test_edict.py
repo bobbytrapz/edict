@@ -11,6 +11,10 @@ class TestEdict(unittest.TestCase):
         entry = edict.parse_entry(raw)
         self.assertEqual(str(entry), should_be)
 
+    def test_parse_edict(self):
+        entries = edict.parse_dictionary('edict2')
+        self.assertEqual(len(entries), 177086)
+
 
 if __name__ == '__main__':
     unittest.main()
