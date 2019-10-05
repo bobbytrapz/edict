@@ -137,25 +137,42 @@ MARKING_LOOKUP.update(FIELD_LOOKUP)
 
 
 @dataclass
-class Entry:
-    raw: str = field(repr=False)
-    kanji: List[str] = field(default_factory=list)
-    kana: List[str] = field(default_factory=list)
-    pos: List[str] = field(default_factory=list)
+class Word:
+    text: str = ''
     mark: List[str] = field(default_factory=list)
     region: List[str] = field(default_factory=list)
+
+    def __repr__(self):
+        s = f'Word(text={self.text!r}'
+        if self.mark:
+            s += f', mark={self.mark!r}'
+        if self.region:
+            s += f', region={self.region!r}'
+        s += ')'
+        return s
+
+
+@dataclass
+class Definition:
+    words: List[Word] = field(default_factory=list)
+    pos: List[str] = field(default_factory=list)
+
+
+@dataclass
+class Entry:
+    raw: str = field(repr=False)
+    kanji: List[Word] = field(default_factory=list)
+    kana: List[Word] = field(default_factory=list)
+    definitions: List[Definition] = field(default_factory=list)
     ent: List[str] = field(repr=False, default_factory=list)
     ref: List[str] = field(repr=False, default_factory=list)
-    definitions: List = field(init=False)
 
-    def __post_init__(self):
-        self.definitions = [list()]
+    @property
+    def words(self):
+        return [w.text for w in self.kanji + self.kana]
 
-    def add_definitions(self, num, definitions):
-        if num-1 >= len(self.definitions):
-            self.definitions.append(definitions)
-        else:
-            self.definitions[num-1].extend(definitions)
+    def __contains__(self, item):
+        return item in self.words
 
 
 def parse_entry(raw: str) -> Entry:
@@ -169,24 +186,37 @@ def parse_entry(raw: str) -> Entry:
 
     entry = Entry(raw)
 
+    # add to the latest entry definition
+    def _add_definition(words, pos, mark, region):
+        entry.definitions[-1].pos.extend(pos)
+        entry.definitions[-1].words.extend(Word(w, mark, region)
+                                           for w in words)
+
     def _japanese(subitem):
+        mark = list()
         markings = mark_re(subitem)
         for marking in markings:
-            mark = MARKING_LOOKUP.get(marking)
-            if mark:
+            m = MARKING_LOOKUP.get(marking)
+            if m:
                 subitem = subitem.replace(f'({marking})', '')
-                entry.mark.append(mark)
-        return subitem.strip()
+                mark.append(m)
+        return subitem.strip(), mark
 
     def _kanji(subitem):
-        word = _japanese(subitem)
+        subitem, mark = _japanese(subitem)
+        word = Word(subitem, mark=mark)
         entry.kanji.append(word)
 
     def _kana(subitem):
-        word = _japanese(subitem)
+        subitem, mark = _japanese(subitem)
+        word = Word(subitem, mark=mark)
         entry.kana.append(word)
 
     def _gloss(subitem):
+        region = list()
+        pos = list()
+        mark = list()
+
         # check if entry listing
         if subitem.startswith('Ent'):
             entry.ent.append(subitem)
@@ -203,32 +233,36 @@ def parse_entry(raw: str) -> Entry:
         for marking in markings:
             if marking.endswith(':'):
                 mark = marking[:-1]
-                region = REGION_LOOKUP.get(mark)
-                if region:
+                r = REGION_LOOKUP.get(mark)
+                if r:
                     subitem = subitem.replace(f'({marking})', '')
-                    entry.region.append(region)
+                    region.append(r)
             else:
-                mark = MARKING_LOOKUP.get(marking)
-                if mark:
+                m = MARKING_LOOKUP.get(marking)
+                if m:
                     subitem = subitem.replace(f'({marking})', '')
-                    entry.mark.append(mark)
+                    mark.append(m)
         # check for additional info in gloss and replace it before adding
         additional_info = info_re(subitem)
         for info in additional_info:
             for info_part in info.split(','):
-                pos = POS_LOOKUP.get(info_part)
-                if pos:
-                    entry.pos.append(pos)
+                p = POS_LOOKUP.get(info_part)
+                if p:
                     subitem = subitem.replace(f'({info})', '')
+                    pos.append(p)
+        # may have been modified and so could be an empty string
         if subitem:
             # add definition
-            defnum = len(entry.definitions)
+            if not entry.definitions:
+                entry.definitions.append(Definition())
             m = defnum_re(subitem)
             if m:
                 defnum = int(m[0])
+                if defnum > 1:
+                    entry.definitions.append(Definition())
                 subitem = subitem.replace(f'({defnum})', '')
-            glosses = [g for g in subitem.strip().split(';') if g]
-            entry.add_definitions(defnum, glosses)
+            words = [g for g in subitem.strip().split(';') if g]
+            _add_definition(words, pos, mark, region)
 
     if '[' in raw:
         mode = _kanji

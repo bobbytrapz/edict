@@ -17,9 +17,7 @@ entries = edict.parse_dictionary(EDICT_FILE_PATH)
 An edict.Entry looks like this:
 
 ```
-Entry(kanji=['大丈夫'], kana=['だいじょうぶ', 'だいじょぶ'], pos=['adjectival nouns or quasi-adjectives (keiyodoshi)', 'adverb (fukushi)', 'noun (common) (futsuumeishi)'], mark=['common', 'archaism', 'common'], region=[], definitions=[['safe', 'all right', 'alright', 'OK', 'okay', 'sure'], ['certainly', 'surely', 'undoubtedly'], ['(だいじょうぶ only)   great man', 'fine figure of a man']])
+Entry(kanji=[Word(text='大丈夫')], kana=[Word(text='だいじょうぶ', mark=['common']), Word(text='だいじょぶ')], definitions=[Definition(words=[Word(text='safe'), Word(text='all right'), Word(text='alright'), Word(text='OK'), Word(text='okay'), Word(text='sure')], pos=['adjectival nouns or quasi-adjectives (keiyodoshi)']), Definition(words=[Word(text='certainly'), Word(text='surely'), Word(text='undoubtedly')], pos=['adverb (fukushi)']), Definition(words=[Word(text='(だいじょうぶ only)   great man', mark=['archaism']), Word(text='fine figure of a man')], pos=['noun (common) (futsuumeishi)'])])
 ```
 
-The part of speech for Entry.definitions[0] should be Entry.pos[0]
-
-Should be reasonably fast. Parsing edict2 took about 5 seconds on my machine.
+Should be reasonably fast. Parsing edict2 took around 5 seconds on my machine.
