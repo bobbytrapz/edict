@@ -262,8 +262,8 @@ def parse_entry(raw: str) -> Entry:
     return entry
 
 
-def parse_dictionary(edict_path) -> List[Entry]:
-    lines = open(str(edict_path), 'r', encoding='EUC-JP').readlines()
+def parse_dictionary(edict_path, encoding='EUC-JP') -> List[Entry]:
+    lines = open(str(edict_path), encoding=encoding).readlines()
     return [parse_entry(raw)
             for raw in lines
             if not raw.startswith('#')]
