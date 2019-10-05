@@ -66,7 +66,8 @@ POS_LOOKUP = {
     'vs-i': 'suru verb - irregular',
     'vs-s': 'suru verb - special class',
     'vt': 'transitive verb',
-    'vz': 'Ichidan verb - zuru verb - (alternative form of -jiru verbs)'}
+    'vz': 'Ichidan verb - zuru verb - (alternative form of -jiru verbs)'
+}
 
 MARKING_LOOKUP = {
     'X': 'rude or X-rated term',
@@ -103,7 +104,8 @@ MARKING_LOOKUP = {
     'uK': 'word usually written using kanji alone',
     'uk': 'word usually written using kana alone',
     'vulg': 'vulgar expression or word',
-    'P': 'common'}
+    'P': 'common'
+}
 
 REGION_LOOKUP = {
     'kyb': 'Kyoto-ben',
@@ -127,7 +129,8 @@ FIELD_LOOKUP = {
     'ling': 'linguistics terminology',
     'math': 'mathematics',
     'mil': 'military',
-    'physics': 'physics terminology'}
+    'physics': 'physics terminology'
+}
 
 MARKING_LOOKUP.update(REGION_LOOKUP)
 MARKING_LOOKUP.update(FIELD_LOOKUP)
