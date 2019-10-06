@@ -171,9 +171,6 @@ class Entry:
     def words(self):
         return [w.text for w in self.kanji + self.kana]
 
-    def __contains__(self, item):
-        return item in self.words
-
 
 def parse_entry(raw: str) -> Entry:
     ''' parse an edict dictionary entry '''
